@@ -1,0 +1,3 @@
+# Токен бота
+
+TOKEN = '6478111175:AAHKn0haLwAn7dnCEIdDIkUxAhCSPuSmy64'
