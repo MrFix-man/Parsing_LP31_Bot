@@ -1,11 +1,6 @@
 
 import logging
 
-from settings_bot import TOKEN
-from handlers_bot import (
-    hello_user
-)
-
 from telegram.ext import (
     Updater,
     MessageHandler,
@@ -15,13 +10,23 @@ from telegram.ext import (
 
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 
+
+
 logging.basicConfig(filename='bot.log', level=logging.INFO)
 
+
+def main_keyboard():
+    return ReplyKeyboardMarkup([['Начало работы']])
+
+#-- Приветсвуем пользователя(кнопка СТАРТ)
+def hello_user(update, context):
+    name = update.message.from_user.first_name
+    update.message.reply_text(f'Привет, {name}! Очень рад.', reply_markup=main_keyboard())
 
 
 
 def main():
-    mybot = Updater(TOKEN, use_context=True)
+    mybot = Updater('6478111175:AAHKn0haLwAn7dnCEIdDIkUxAhCSPuSmy64', use_context=True)
     dp = mybot.dispatcher
 
     dp.add_handler(CommandHandler('start', hello_user))
