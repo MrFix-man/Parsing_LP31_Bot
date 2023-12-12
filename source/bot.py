@@ -1,6 +1,3 @@
-
-import logging
-
 from telegram.ext import (
     Updater,
     MessageHandler,
@@ -12,7 +9,6 @@ from telegram import ReplyKeyboardMarkup, KeyboardButton
 
 
 
-logging.basicConfig(filename='bot.log', level=logging.INFO)
 
 
 def main_keyboard():
@@ -34,8 +30,6 @@ def main():
     # кнопки
 
     dp.add_handler(MessageHandler(Filters.regex('^(Начало работы)$'), hello_user))
-
-    logging.info('Начало работы бота.')
 
     mybot.start_polling()
     mybot.idle()
