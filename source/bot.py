@@ -42,6 +42,7 @@ class Bot:
     """Пока кнопка выводит в консоль данные, получаемые от пользователя бота"""
     def search(self, update, context):
         print(update.message.from_user)
-        
-bot1 = Bot('6478111175:AAHKn0haLwAn7dnCEIdDIkUxAhCSPuSmy64')
-bot1.start()
+
+if __name__ == '__main':           
+    bot1 = Bot('6478111175:AAHKn0haLwAn7dnCEIdDIkUxAhCSPuSmy64')
+    bot1.start()
