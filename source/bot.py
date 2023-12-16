@@ -8,7 +8,7 @@ from telegram.ext import (
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 
 
-
+# херня
 
 
 def main_keyboard():
