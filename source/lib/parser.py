@@ -3,23 +3,25 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
-class Parser:
-    @staticmethod
-    def get_parsing_avito():
+class Parser():
+
+    def __init__(self, option=webdriver.ChromeOptions(), driver=webdriver.Chrome()):
+        self.option = option
+        self.driver = driver
+
+    def get_parsing_avito(self):
 
         try:
             url = "https://www.avito.ru/balashiha/kvartiry/sdam/na_dlitelnyy_srok-ASgBAgICAkSSA8gQ8AeQUg"
-            option = webdriver.ChromeOptions()
-            option.add_argument("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                                "Chrome/120.0.0.0 Safari/537.36")
-            driver = webdriver.Chrome()
-            driver.get(url)
+            self.option.add_argument("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                                     "Chrome/120.0.0.0 Safari/537.36")
+            self.driver.get(url)
             page_number = 1
 
             for items in range(page_number):
                 offer = {}
 
-                elems = driver.find_elements(by=By.CSS_SELECTOR, value='div[data-marker="item"]')
+                elems = self.driver.find_elements(by=By.CSS_SELECTOR, value='div[data-marker="item"]')
 
                 for elem in elems:
                     try:
@@ -48,13 +50,14 @@ class Parser:
                         print(ex)
 
             with open("first_offers.json", "w") as file:
-                json.dump(offer, file, indent=4, ensure_ascii=False)
+                json.dump(dict(sorted(offer.items(), key=lambda x: x[1]['price'])), file, indent=4, ensure_ascii=False)
 
-            return offer
+            return dict(sorted(offer.items(), key=lambda x: x[1]['price']))
 
         finally:
-            driver.close()
-            driver.quit()
+            self.driver.close()
+            self.driver.quit()
 
 
-Parser.get_parsing_avito()
+ekz_pars = Parser()
+print(ekz_pars.get_parsing_avito())
