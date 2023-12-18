@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-
 class Parser:
 
     def __init__(self, option=webdriver.ChromeOptions(), driver=webdriver.Chrome()) -> None:
