@@ -56,7 +56,7 @@ class Bot:
             cursor.execute(sqlite_select_query)
             records = cursor.fetchall()
             for row in records:
-                ("id:", row[0])
+                print("id:", row[0])
                 print("area:", row[1])
                 print("price:", row[2])
                 print("address:", row[3])
