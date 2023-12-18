@@ -6,6 +6,7 @@ from telegram.ext import (
 )
 
 from telegram import ReplyKeyboardMarkup, KeyboardButton
+import sqlite3
 
 
 class Bot:
@@ -42,6 +43,36 @@ class Bot:
     """Пока кнопка выводит в консоль данные, получаемые от пользователя бота"""
     def search(self, update, context):
         print(update.message.from_user)
+
+
+    """Предположительно функция для обработки БД"""
+    def read_sql_db(records):
+        try:
+            sqlite_connection = sqlite3.connect('sqlite_python.db')
+            cursor = sqlite_connection.cursor()
+            print("Подключен к SQLite")
+
+            sqlite_select_query = """тут пока ХЗ"""
+            cursor.execute(sqlite_select_query)
+            records = cursor.fetchall()
+            for row in records:
+                ("id:", row[0])
+                print("area:", row[1])
+                print("price:", row[2])
+                print("address:", row[3])
+                print("district:", row[4])
+                print("floor:", row[5])
+                print("url:", row[6])
+                print("type:", row[7], end="\n\n")
+
+            cursor.close()
+
+        except sqlite3.Error as error:
+            print("Ошибка при работе с SQLite", error)
+        finally:
+            if sqlite_connection:
+                sqlite_connection.close()
+                print("Соединение с SQLite закрыто")
 
 if __name__ == '__main':           
     bot1 = Bot('6478111175:AAHKn0haLwAn7dnCEIdDIkUxAhCSPuSmy64')
