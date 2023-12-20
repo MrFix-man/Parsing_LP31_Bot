@@ -17,7 +17,7 @@ class Bot:
         dp = self.mybot.dispatcher
         self.num_req = num_req
     
-    
+        #-- Начало диалога с пользователем
         user_req = ConversationHandler(
             entry_points=[MessageHandler(Filters.regex('^(Сделать запрос объявлений)$'), self.start_req)],
 
@@ -29,7 +29,7 @@ class Bot:
             MessageHandler(Filters.text | Filters.photo | Filters.video | Filters.document | Filters.location,
             self.dont_know)
         ]
-        )
+        )#-- Конец диалога с пользоватем
 
         dp.add_handler(user_req)
         dp.add_handler(CommandHandler('start', self.hello_user))
