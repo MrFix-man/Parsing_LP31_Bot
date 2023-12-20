@@ -22,7 +22,7 @@ class Bot:
             entry_points=[MessageHandler(Filters.regex('^(Сделать запрос объявлений)$'), self.start_req)],
 
         states={
-            'num_req': [MessageHandler(Filters.text, self.take_num_req)],
+            'num_request': [MessageHandler(Filters.text, self.take_num_req)],
             'final': [MessageHandler(Filters.regex('^(Показать)$'), self.get_data)]
         },
         fallbacks= [
@@ -64,10 +64,8 @@ class Bot:
         print(update.message.from_user)
 
 
-    """Предположительно функция для обработки БД"""
-    def make_user_list(self, update, context):
-        pass
-
+    """Функции диалога с клиентом"""
+    #-- Приветствие и запрос количества объявлений к показу
     def start_req(self, update, context):
         update.message.reply_text(
             'Привет, сколько объявлений нужно отобразить?',
@@ -75,6 +73,8 @@ class Bot:
         )
         return 'num_req'
     
+    #-- Проверяем введно ли целое число и складываем значение в num_req, 
+    #-- Или ведомаляем что ввод не корректный
     def take_num_req(self, update, context):
         try:
             update.message.reply_text('Записал, подбираю варианты...')
@@ -87,14 +87,17 @@ class Bot:
         except(ValueError, TypeError):
             user_text = f'Вы не ввели число, введите пожалуйста желаемое число запросов.'
             update.message.reply_text(user_text)
-            return 'num_req'
+            return 'num_request'
         return 'final' 
         
-    
+    #-- Блок fallbacks для обработки не целевых действий пользователя, если он:
+    #-- прислал фото, видео, геолокацию или документ
     def dont_know(self, update, context):
         update.message.reply_text(f'Не целевое дейсвие, я понятия не имею что с этим делать...')
+        return 'num_request'
 
-
+    #-- Тут шабллон вывода данных для пользователя в удобном формате по заданным 
+    #-- Параметрам, пока не понял как прикрутить сюда req_num (Количество объявлений)
     def get_data(self, update, context):
         data = [{
             'id': 'id объявления',
@@ -118,7 +121,9 @@ class Bot:
 <b>Вид продажи</b> - {data[0]['type']}
 Было введено ранее число запросов - {self.num_req}"""
         update.message.reply_text(user_final_text, parse_mode=ParseMode.HTML)
-        return ConversationHandler.END
+        return ConversationHandler.END #-- Конец диалога и возврат к обыбчному режиму бота
+
+
 
 if __name__ == '__main__':           
     bot1 = Bot('6478111175:AAHKn0haLwAn7dnCEIdDIkUxAhCSPuSmy64')
