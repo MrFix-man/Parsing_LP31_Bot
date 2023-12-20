@@ -23,7 +23,7 @@ class Bot:
 
         states={
             'num_req': [MessageHandler(Filters.text, self.take_num_req)],
-            'fi': [MessageHandler(Filters.regex('^(Показать)$'), self.get_data)]
+            'final': [MessageHandler(Filters.regex('^(Показать)$'), self.get_data)]
         },
         fallbacks= [
             MessageHandler(Filters.text | Filters.photo | Filters.video | Filters.document | Filters.location,
@@ -88,7 +88,7 @@ class Bot:
             user_text = f'Вы не ввели число, введите пожалуйста желаемое число запросов.'
             update.message.reply_text(user_text)
             return 'num_req'
-        return 'fi' 
+        return 'final' 
         
     
     def dont_know(self, update, context):
