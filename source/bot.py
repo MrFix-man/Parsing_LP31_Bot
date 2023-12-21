@@ -12,7 +12,7 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, ParseMode
 class Bot:
 
     """Основные данные бота, команды для бота и логика работы"""
-    def __init__(self, token, num_req=0):
+    def __init__(self, token):
         self.mybot = Updater(token, use_context=True)
         dp = self.mybot.dispatcher
         
@@ -23,7 +23,7 @@ class Bot:
 
         states={
             'num_request': [MessageHandler(Filters.text, self.take_num_req)],
-            'final': [MessageHandler(Filters.regex('^(Показать)$'), self.get_data)]
+            'final': [MessageHandler(Filters.regex('^(Показать)$'), self._get_data)]
         },
         fallbacks= [
             MessageHandler(Filters.photo | Filters.video | Filters.document | Filters.location,
@@ -98,7 +98,7 @@ class Bot:
 
     #-- Тут шабллон вывода данных для пользователя в удобном формате по заданным 
     #-- Параметрам, пока не понял как прикрутить сюда req_num (Количество объявлений)
-    def get_data(self, update, context):
+    def _get_data(self, update, context):
         data = {
             'id': 'id объявления',
             'room': 'Количество комнат',
