@@ -14,7 +14,6 @@ class Parser:
         self.option.add_argument("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                                  "Chrome/120.0.0.0 Safari/537.36")
         self.driver.get(url)
-
         return self._get_info()
 
     def _get_element(self) -> any:
@@ -22,8 +21,7 @@ class Parser:
 
     def _get_info(self) -> list[dict]:
         all_offers = []
-        elems = self._get_element()
-        for elem in elems:
+        for elem in self._get_element():
             avito_id = int(elem.get_attribute("id")[1:])
             url_offer = elem.find_element(by=By.CSS_SELECTOR, value='a[itemprop="url"]').get_attribute(
                 "href")
