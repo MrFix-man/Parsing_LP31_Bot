@@ -46,6 +46,7 @@ class Parser:
                 "area": area,
                 "floor_level": floor_level,
                 "url_offer": url_offer,
+                "type": "real estate"
             }
             all_offers.append(offer)
         return all_offers
