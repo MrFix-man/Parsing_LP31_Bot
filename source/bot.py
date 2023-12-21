@@ -15,7 +15,7 @@ class Bot:
     def __init__(self, token, num_req=0):
         self.mybot = Updater(token, use_context=True)
         dp = self.mybot.dispatcher
-        self.num_req = num_req
+        
     
         #-- Начало диалога с пользователем
         user_req = ConversationHandler(
@@ -26,7 +26,7 @@ class Bot:
             'final': [MessageHandler(Filters.regex('^(Показать)$'), self.get_data)]
         },
         fallbacks= [
-            MessageHandler(Filters.text | Filters.photo | Filters.video | Filters.document | Filters.location,
+            MessageHandler(Filters.photo | Filters.video | Filters.document | Filters.location,
             self.dont_know)
         ]
         )#-- Конец диалога с пользоватем
@@ -71,7 +71,7 @@ class Bot:
             'Привет, сколько объявлений нужно отобразить?',
             reply_markup=ReplyKeyboardRemove() #-- тормозим основную клавиатуру в боте
         )
-        return 'num_req'
+        return 'num_request'
     
     #-- Проверяем введно ли целое число и складываем значение в num_req, 
     #-- Или ведомаляем что ввод не корректный
@@ -99,29 +99,33 @@ class Bot:
     #-- Тут шабллон вывода данных для пользователя в удобном формате по заданным 
     #-- Параметрам, пока не понял как прикрутить сюда req_num (Количество объявлений)
     def get_data(self, update, context):
-        data = [{
+        data = {
             'id': 'id объявления',
             'room': 'Количество комнат',
             'area': 'Площадь жилья',
-            'price': 'Цена жилья',
-            'adress': 'Улица',
+            'price': 'Цена жилья',          #-- Сделал просто словарем, иначе функция по выводу
+            'adress': 'Улица',              #-- текста пользователю не работала
             'distric': 'Район',
             'floor': 'Этаж',
             'url': 'Ссылка на объявление',
             'type': 'Тип объявление - продажа/аренда'
-        }]
-        user_final_text = f"""<b>Номер объявления в системе</b> - {data[0]['id']}
-<b>Комнат в жилье</b> - {data[0]['room']}
-<b>Общая площадь</b> - {data[0]['area']}
-<b>Цена</b> - {data[0]['price']}
-<b>Улица</b> - {data[0]['adress']}
-<b>Район</b> - {data[0]['distric']}
-<b>Этаж</b> - {data[0]['floor']}
-<b>Ссылка</b> - {data[0]['url']}
-<b>Вид продажи</b> - {data[0]['type']}
-Было введено ранее число запросов - {self.num_req}"""
-        update.message.reply_text(user_final_text, parse_mode=ParseMode.HTML)
+        }
+        update.message.reply_text(self._create_final_text(data), parse_mode=ParseMode.HTML)
         return ConversationHandler.END #-- Конец диалога и возврат к обыбчному режиму бота
+    
+    
+    def _create_final_text(self, data):
+        user_final_text = f"""<b>Номер объявления в системе</b> - {data['id']}
+<b>Комнат в жилье</b> - {data['room']}
+<b>Общая площадь</b> - {data['area']}
+<b>Цена</b> - {data['price']}
+<b>Улица</b> - {data['adress']}
+<b>Район</b> - {data['distric']}
+<b>Этаж</b> - {data['floor']}
+<b>Ссылка</b> - {data['url']}
+<b>Вид продажи</b> - {data['type']}"""
+        return user_final_text
+
 
 
 
