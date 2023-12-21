@@ -48,7 +48,6 @@ class Bot:
     """Разметка кнопок клавиатуры в боте"""
     def main_keyboard(self):
         return ReplyKeyboardMarkup([
-        ['Начало работы'], ['Найти квартиру'],
         ['Сделать запрос объявлений']
         ])
     
@@ -57,6 +56,8 @@ class Bot:
     def hello_user(self, update, context):
         self.name = update.message.from_user.first_name
         update.message.reply_text(f'Привет, {self.name}! Очень рад.', reply_markup=self.main_keyboard())
+        update.message.reply_text(f'''В этом боте ты можешь запросить свежие объявления
+с сайта авито о сдаче недвижимости.''')
 
 
     """Пока кнопка выводит в консоль данные, получаемые от пользователя бота"""
@@ -68,7 +69,7 @@ class Bot:
     #-- Приветствие и запрос количества объявлений к показу
     def start_req(self, update, context):
         update.message.reply_text(
-            'Привет, сколько объявлений нужно отобразить?',
+            'Сколько объявлений нужно показать?',
             reply_markup=ReplyKeyboardRemove() #-- тормозим основную клавиатуру в боте
         )
         return 'num_request'
@@ -77,13 +78,13 @@ class Bot:
     #-- Или ведомаляем что ввод не корректный
     def take_num_req(self, update, context):
         try:
+            num_req = int(update.message.text)
+            context.user_data['user_req'] = {'num_req': num_req}
             update.message.reply_text('Записал, подбираю варианты...')
             reply_keyboard = [['Показать']]
             update.message.reply_text('Нажмите на кнопку ниже для отображения результата.', 
             reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
             )
-            num_req = int(update.message.text)
-            context.user_data['user_req'] = {'num_req': num_req}
         except(ValueError, TypeError):
             user_text = f'Вы не ввели число, введите пожалуйста желаемое число запросов.'
             update.message.reply_text(user_text)
@@ -110,7 +111,7 @@ class Bot:
             'url': 'Ссылка на объявление',
             'type': 'Тип объявление - продажа/аренда'
         }
-        update.message.reply_text(self._create_final_text(data), parse_mode=ParseMode.HTML)
+        update.message.reply_text(self._create_final_text(data), reply_markup=self.main_keyboard(), parse_mode=ParseMode.HTML)
         return ConversationHandler.END #-- Конец диалога и возврат к обыбчному режиму бота
     
     
