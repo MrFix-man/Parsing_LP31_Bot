@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+
 class Parser:
 
     def __init__(self, option=webdriver.ChromeOptions(), driver=webdriver.Chrome()) -> None:
@@ -14,15 +15,14 @@ class Parser:
                                  "Chrome/120.0.0.0 Safari/537.36")
         self.driver.get(url)
 
-        self._get_element()
         return self._get_info()
 
     def _get_element(self) -> any:
         return self.driver.find_elements(by=By.CSS_SELECTOR, value='div[data-marker="item"]')
 
     def _get_info(self) -> list[dict]:
+        all_offers = []
         elems = self._get_element()
-        offer = {}
         for elem in elems:
             avito_id = int(elem.get_attribute("id")[1:])
             url_offer = elem.find_element(by=By.CSS_SELECTOR, value='a[itemprop="url"]').get_attribute(
@@ -37,7 +37,8 @@ class Parser:
             floor = int(advert[0].split(', ')[2].split('/')[0])
             floor_level = f"Этаж: {floor}"
             area = float(advert[0].split(", ")[1][:-3].replace(",", "."))
-            offer[avito_id] = {
+            offer = {
+                "avito_id": avito_id,
                 "price": price,
                 "adress": adress,
                 "district": district,
@@ -46,13 +47,9 @@ class Parser:
                 "floor_level": floor_level,
                 "url_offer": url_offer,
             }
-
-        return [offer]
+            all_offers.append(offer)
+        return all_offers
 
     def _stop(self) -> None:
         self.driver.close()
         self.driver.quit()
-
-
-ekz_pars = Parser()
-print(ekz_pars.get_parsing_avito())
