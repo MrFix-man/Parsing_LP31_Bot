@@ -2,8 +2,7 @@ from telegram.ext import (
     Updater,
     MessageHandler,
     CommandHandler,
-    Filters,
-    ConversationHandler
+    Filters
 )
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, ParseMode
@@ -16,30 +15,18 @@ class Bot:
         self.mybot = Updater(token, use_context=True)
         dp = self.mybot.dispatcher
         
-    
-        #-- Начало диалога с пользователем
-        user_req = ConversationHandler(
-            entry_points=[MessageHandler(Filters.regex('^(Сделать запрос объявлений)$'), self.start_req)],
-
-        states={
-            'num_request': [MessageHandler(Filters.text, self.take_num_req)],
-            'final': [MessageHandler(Filters.regex('^(Показать)$'), self._get_data)]
-        },
-        fallbacks= [
-            MessageHandler(Filters.photo | Filters.video | Filters.document | Filters.location,
-            self.dont_know)
-        ]
-        )#-- Конец диалога с пользоватем
-
-        dp.add_handler(user_req)
         dp.add_handler(CommandHandler('start', self.hello_user))
-        dp.add_handler(CommandHandler('search', self.search))
-        # кнопки
+   
+        """Команды на кнопки для уточнения интересующей категории объявлений"""
+        dp.add_handler(MessageHandler(Filters.regex('^(Аренда жилья)$'), self.rent))
+        dp.add_handler(MessageHandler(Filters.regex('^(Покупка жилья)$'), self.buy))
 
-        dp.add_handler(MessageHandler(Filters.regex('^(Начало работы)$'), self.hello_user))
-        dp.add_handler(MessageHandler(Filters.regex('^(Найти квартиру)$'), self.search))  
+        """Команды на кнопки при запросе нужного количества объявлений"""
+        dp.add_handler(MessageHandler(Filters.regex('^(Сделать запрос объявлений - 10)$'), self.take_10))
+        dp.add_handler(MessageHandler(Filters.regex('^(Сделать запрос объявлений - 30)$'), self.take_30))
+        dp.add_handler(MessageHandler(Filters.regex('^(Сделать запрос всех доступных объявлений)$'), self.take_all))   
         
-    """Функция для запуска"""
+    """Функция для запуска бота"""
     def start(self):       
         self.mybot.start_polling()
         self.mybot.idle()
@@ -48,7 +35,16 @@ class Bot:
     """Разметка кнопок клавиатуры в боте"""
     def main_keyboard(self):
         return ReplyKeyboardMarkup([
-        ['Сделать запрос объявлений']
+            ['Аренда жилья'],
+            ['Покупка жилья']
+        ])
+
+
+    def keyboard_requests(self):
+        return ReplyKeyboardMarkup([
+        ['Сделать запрос объявлений - 10'],
+        ['Сделать запрос объявлений - 30'],
+        ['Сделать запрос всех доступных объявлений']
         ])
     
 
@@ -57,74 +53,61 @@ class Bot:
         self.name = update.message.from_user.first_name
         update.message.reply_text(f'Привет, {self.name}! Очень рад.', reply_markup=self.main_keyboard())
         update.message.reply_text(f'''В этом боте ты можешь запросить свежие объявления
-с сайта авито о сдаче недвижимости.''')
+с сайта авито о покупке или сдаче недвижимости.''')
+        update.message.reply_text(f'Что показать? Аренду или покупку жилья?')
+
+    """Запрос пользователя сколько нужно объявлений
+    в зависимости от типа (аренда/покупка)"""
+    def rent(self, update, context):
+        update.message.reply_text(f'Я могу показать 10, 30 или все объявления по аренде жилья, выбери кнопку',
+        reply_markup=self.keyboard_requests())
+
+    def buy(self, update, context):
+        update.message.reply_text(f'Я могу показать 10, 30 или все объявления по продаже жилья, выбери кнопку',
+        reply_markup=self.keyboard_requests())
 
 
-    """Пока кнопка выводит в консоль данные, получаемые от пользователя бота"""
-    def search(self, update, context):
-        print(update.message.from_user)
+    """Блок функций под кнопки в боте на вывод объявлений"""
+    def take_10(self, update, context):
+        num_of_requests = 10
+        update.message.reply_text(self._get_data(update, context))
+
+    def take_30(self, update, context):
+        num_of_requests = 30
+        update.message.reply_text(self._get_data(update, context))
+
+    def take_all(self, update, context):
+        update.message.reply_text(self._get_data(update, context))
 
 
-    """Функции диалога с клиентом"""
-    #-- Приветствие и запрос количества объявлений к показу
-    def start_req(self, update, context):
-        update.message.reply_text(
-            'Сколько объявлений нужно показать?',
-            reply_markup=ReplyKeyboardRemove() #-- тормозим основную клавиатуру в боте
-        )
-        return 'num_request'
-    
-    #-- Проверяем введно ли целое число и складываем значение в num_req, 
-    #-- Или ведомаляем что ввод не корректный
-    def take_num_req(self, update, context):
-        try:
-            num_req = int(update.message.text)
-            context.user_data['user_req'] = {'num_req': num_req}
-            update.message.reply_text('Записал, подбираю варианты...')
-            reply_keyboard = [['Показать']]
-            update.message.reply_text('Нажмите на кнопку ниже для отображения результата.', 
-            reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
-            )
-        except(ValueError, TypeError):
-            user_text = f'Вы не ввели число, введите пожалуйста желаемое число запросов.'
-            update.message.reply_text(user_text)
-            return 'num_request'
-        return 'final' 
-        
-    #-- Блок fallbacks для обработки не целевых действий пользователя, если он:
-    #-- прислал фото, видео, геолокацию или документ
-    def dont_know(self, update, context):
-        update.message.reply_text(f'Не целевое дейсвие, я понятия не имею что с этим делать...')
-        return 'num_request'
 
-    #-- Тут шабллон вывода данных для пользователя в удобном формате по заданным 
-    #-- Параметрам, пока не понял как прикрутить сюда req_num (Количество объявлений)
+    """Функции для отправки пользователю финального текста"""
     def _get_data(self, update, context):
-        data = {
+        data = [{
             'id': 'id объявления',
             'room': 'Количество комнат',
             'area': 'Площадь жилья',
-            'price': 'Цена жилья',          #-- Сделал просто словарем, иначе функция по выводу
-            'adress': 'Улица',              #-- текста пользователю не работала
+            'price': 'Цена жилья',          
+            'adress': 'Улица',              
             'distric': 'Район',
             'floor': 'Этаж',
             'url': 'Ссылка на объявление',
             'type': 'Тип объявление - продажа/аренда'
-        }
+        }]
         update.message.reply_text(self._create_final_text(data), reply_markup=self.main_keyboard(), parse_mode=ParseMode.HTML)
-        return ConversationHandler.END #-- Конец диалога и возврат к обыбчному режиму бота
+      
     
     
     def _create_final_text(self, data):
-        user_final_text = f"""<b>Номер объявления в системе</b> - {data['id']}
-<b>Комнат в жилье</b> - {data['room']}
-<b>Общая площадь</b> - {data['area']}
-<b>Цена</b> - {data['price']}
-<b>Улица</b> - {data['adress']}
-<b>Район</b> - {data['distric']}
-<b>Этаж</b> - {data['floor']}
-<b>Ссылка</b> - {data['url']}
-<b>Вид продажи</b> - {data['type']}"""
+        user_final_text = f"""<b>Номер объявления в системе</b> - {data[0]['id']}
+<b>Комнат в жилье</b> - {data[0]['room']}
+<b>Общая площадь</b> - {data[0]['area']}
+<b>Цена</b> - {data[0]['price']}
+<b>Улица</b> - {data[0]['adress']}
+<b>Район</b> - {data[0]['distric']}
+<b>Этаж</b> - {data[0]['floor']}
+<b>Ссылка</b> - {data[0]['url']}
+<b>Вид продажи</b> - {data[0]['type']}"""
         return user_final_text
 
 
