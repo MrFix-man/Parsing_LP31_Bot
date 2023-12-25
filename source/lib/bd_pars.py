@@ -1,11 +1,10 @@
-import sqlite3
+from sqlalchemy import create_engine
+from sqlalchemy.future import engine
+from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 
-con = sqlite3.connect('mydata.db')
 
-sql = 'CREATE TABLE ads (id INT, rooms INT, area FLOAT, price INT, address TEXT, district TEXT, floor INT, url TEXT, type TEXT)'
+bd_sesion = scoped_session(sessionmaker(bind=engine))
 
-cursor = con.cursor()
+Base = declarative_base()
 
-cursor.execute(sql)
-
-con.close()
+Base.query = bd_sesion.query_property()
