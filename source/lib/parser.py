@@ -14,14 +14,14 @@ class Parser:
         self.option.add_argument("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                                  "Chrome/120.0.0.0 Safari/537.36")
         self.driver.get(url)
-        return self._get_info()
+        return self._get_info_from_avito()
 
-    def _get_element(self) -> any:
+    def _get_element_avito(self) -> any:
         return self.driver.find_elements(by=By.CSS_SELECTOR, value='div[data-marker="item"]')
 
-    def _get_info(self) -> list[dict]:
+    def _get_info_from_avito(self) -> list[dict]:
         all_offers = []
-        for elem in self._get_element():
+        for elem in self._get_element_avito():
             avito_id = int(elem.get_attribute("id")[1:])
             url_offer = elem.find_element(by=By.CSS_SELECTOR, value='a[itemprop="url"]').get_attribute(
                 "href")
@@ -52,3 +52,48 @@ class Parser:
     def _stop(self) -> None:
         self.driver.close()
         self.driver.quit()
+
+    def get_parsing_drom(self):
+        url = "https://moscow.drom.ru/auto/used/all/?unsold=1"
+        self.option.add_argument("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                                 "Chrome/120.0.0.0 Safari/537.36")
+        self.driver.get(url)
+        self._get_element_drom()
+        return self._get_info_from_drom()
+
+    def _get_element_drom(self):
+        return self.driver.find_elements(by=By.CSS_SELECTOR, value='a[class="css-1oas0dk e1huvdhj1"]')
+
+    def _get_info_from_drom(self):
+        cars_list = []
+
+        for element in self._get_element_drom():
+            url_cars = element.get_attribute("href")
+            car_name = element.find_element(by=By.CSS_SELECTOR, value='span').text[:-6]
+            car_year = int(element.find_element(by=By.CSS_SELECTOR, value='span').text[-4:])
+            short_descript = element.find_element(by=By.CSS_SELECTOR,
+                                                  value='div[class="css-1fe6w6s e162wx9x0"').text.strip()
+            price = element.find_element(by=By.CSS_SELECTOR, value='span[data-ftid="bull_price"]').text
+            price_int = int(price.replace(' ', ''))
+            town = element.find_element(by=By.CSS_SELECTOR, value='span[data-ftid="bull_location"]').text
+            day_of_announcement = element.find_element(by=By.CSS_SELECTOR, value='div[data-ftid="bull_date"]').text
+
+            cars_dict = {'url_cars': url_cars,
+                         'car_name': car_name,
+                         'car_year': car_year,
+                         'short_descript': short_descript,
+                         'price_int': price_int,
+                         'town': town,
+                         'day_of_announcement': day_of_announcement
+                         }
+            cars_list.append(cars_dict)
+        return cars_list
+
+    def _stop_driver(self):
+        self.driver.close()
+        self.driver.quit()
+
+
+avito = Parser()
+drom = Parser()
+print(drom.get_parsing_drom())
