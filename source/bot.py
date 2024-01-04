@@ -6,6 +6,7 @@ from telegram.ext import (
 )
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, ParseMode
+from pymongo import MongoClient
 
 
 class Bot:
@@ -14,6 +15,8 @@ class Bot:
     def __init__(self, token):
         self.mybot = Updater(token, use_context=True)
         dp = self.mybot.dispatcher
+        self.client = MongoClient('mongodb://localhost:27017/') #-- Добавление подключения к локальной базе
+        self.db = self.client['Users_LP31_Pars'] #-- название БД
         
         dp.add_handler(CommandHandler('start', self.hello_user))
    
@@ -27,7 +30,7 @@ class Bot:
         dp.add_handler(MessageHandler(Filters.regex('^(Сделать запрос всех доступных объявлений)$'), self.take_all))   
         
     """Функция для запуска бота"""
-    def start(self):       
+    def start(self):     
         self.mybot.start_polling()
         self.mybot.idle()
 
@@ -50,6 +53,7 @@ class Bot:
 
     """Функция приветсвует пользователя по имени"""
     def hello_user(self, update, context):
+        self.get_or_create_user_in_db(update.effective_user, update.effective_chat.id)
         self.name = update.message.from_user.first_name
         update.message.reply_text(f'Привет, {self.name}! Очень рад.', reply_markup=self.main_keyboard())
         update.message.reply_text(f'''В этом боте ты можешь запросить свежие объявления
@@ -109,7 +113,26 @@ class Bot:
 <b>Ссылка</b> - {data[0]['url']}
 <b>Вид продажи</b> - {data[0]['type']}"""
         return user_final_text
+    
 
+    """
+    Создаем подкоючение к базе данных
+    База размещена локально
+    """
+
+
+    def get_or_create_user_in_db(self, effective_user, chat_id):
+        user = self.db.users.find_one({"user_id": effective_user.id})
+        if not user:
+            user = {
+                "user_id": effective_user.id,
+                "first_name": effective_user.first_name,
+                "last_name": effective_user.last_name,
+                "username": effective_user.username,
+                "chat_id": chat_id
+            }
+            self.db.users.insert_one(user)
+        return user
 
 
 
