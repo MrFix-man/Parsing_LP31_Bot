@@ -1,0 +1,40 @@
+from pymongo import MongoClient
+
+
+class Mongo:
+    """Инициализируем ссылку на сервер и название БД"""
+    def __init__(self):
+        self.uri = 'mongodb://localhost:27017/'
+        self.db_name = 'Users_LP31_Pars'
+        
+
+    """Фнкция запуска, проверяем что сервер работает корректно
+    или возвращаем ошибку"""
+    def connect(self):
+        self.client = MongoClient(self.uri)
+        self.db = self.client[self.db_name]
+        try:
+            self.client.admin.command('ping')
+            print("Успешное подключегние к MongoDB!")
+        except Exception as e:
+            print(e)
+
+
+    """Функция проверяет есть ли пользователь в базе, если его нет
+    создает в базе по заданым ниже параметрам"""
+    def get_or_create_user_in_db(self, effective_user, chat_id):
+        self.connect() #-- Пробуем подключтиться
+        user = self.db.users.find_one({"user_id": effective_user.id})
+        if not user:
+            user = {
+                "user_id": effective_user.id,
+                "first_name": effective_user.first_name,
+                "last_name": effective_user.last_name,
+                "username": effective_user.username,
+                "chat_id": chat_id
+                }
+            self.db.users.insert_one(user)
+            return user
+        print('Закрыто соединение.')
+     
+            
