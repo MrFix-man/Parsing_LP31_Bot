@@ -115,15 +115,6 @@ class Bot:
         return user_final_text
     
 
-    """
-    Создаем подкоючение к базе данных
-    База размещена локально
-    """
-
-
-    
-
-
 
 if __name__ == '__main__':           
     bot1 = Bot('6478111175:AAHKn0haLwAn7dnCEIdDIkUxAhCSPuSmy64')
