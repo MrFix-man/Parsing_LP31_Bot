@@ -13,12 +13,11 @@ class Mongo:
     def connect(self):
         self.client = MongoClient(self.uri)
         self.db = self.client[self.db_name]
-        try:
-            self.client.admin.command('ping')
-            print("Успешное подключегние к MongoDB!")
-        except Exception as e:
-            print(e)
 
+
+    """Закрытие соединения"""
+    def close(self):
+        pass  
 
     """Функция проверяет есть ли пользователь в базе, если его нет
     создает в базе по заданым ниже параметрам"""
@@ -36,5 +35,6 @@ class Mongo:
             self.db.users.insert_one(user)
             return user
         print('Закрыто соединение.')
+        self.client.close()
      
             
