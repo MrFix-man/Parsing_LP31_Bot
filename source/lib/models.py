@@ -1,10 +1,9 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float
 
-from bd_pars import Base, engine
+from db_connect import engine, Base
 
-
-class Pars(Base):
-    __tablename__ = 'pars_offer'
+class Pars_db(Base):
+    __tablename__ = 'pars_db'
 
     id = Column(Integer(), primary_key=True)
     rooms = Column(Integer())
@@ -16,9 +15,5 @@ class Pars(Base):
     url = Column(String(), unique=True)
     type = Column(String())
 
-    def __init__(self):
-        pass
-
-
 if __name__ == '__main__':
-    Base
+    Base.metadata.create_all(bind=engine)
