@@ -1,11 +1,13 @@
 from pymongo import MongoClient
 
 
+
 class Mongo:
     """Инициализируем ссылку на сервер и название БД"""
     def __init__(self):
         self.uri = 'mongodb://localhost:27017/'
         self.db_name = 'Users_LP31_Pars'
+        self.connection = None
         
 
     """Фнкция запуска, проверяем что сервер работает корректно
@@ -17,24 +19,30 @@ class Mongo:
 
     """Закрытие соединения"""
     def close(self):
-        pass  
+        self.client.close()
+          
 
     """Функция проверяет есть ли пользователь в базе, если его нет
     создает в базе по заданым ниже параметрам"""
-    def get_or_create_user_in_db(self, effective_user, chat_id):
+    def create_user_in_db(self, effective_user, chat_id):    
         self.connect() #-- Пробуем подключтиться
-        user = self.db.users.find_one({"user_id": effective_user.id})
-        if not user:
-            user = {
+        user = {
                 "user_id": effective_user.id,
                 "first_name": effective_user.first_name,
                 "last_name": effective_user.last_name,
                 "username": effective_user.username,
                 "chat_id": chat_id
                 }
-            self.db.users.insert_one(user)
-            return user
-        print('Закрыто соединение.')
-        self.client.close()
+        self.db.users.insert_one(user)
+        self.close() #-- Закрываем содинение
+        return user
+
+
+    def get_user(self, user_id):
+        self.connect() #-- Пробуем подключтиться
+        user = self.db.users.find_one({"user_id": user_id})
+        self.close() #-- Закрывам соединение
+        return user
+        
      
             

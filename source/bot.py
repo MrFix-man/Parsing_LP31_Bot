@@ -53,7 +53,7 @@ class Bot:
 
     """Функция приветсвует пользователя по имени"""
     def hello_user(self, update, context):
-        self.mongo.get_or_create_user_in_db(update.effective_user, update.effective_chat.id)
+        self.check_user_in_db(update.effective_user, update.message.chat_id)
         self.name = update.message.from_user.first_name
         update.message.reply_text(f'Привет, {self.name}! Очень рад.', reply_markup=self.main_keyboard())
         update.message.reply_text(f'''В этом боте ты можешь запросить свежие объявления
@@ -114,7 +114,11 @@ class Bot:
 <b>Вид продажи</b> - {data[0]['type']}"""
         return user_final_text
     
-
+    def check_user_in_db(self, effective_user, chat_id):
+        user = self.mongo.get_user( effective_user.id)
+        if not user:
+            self.mongo.create_user_in_db(effective_user, chat_id)
+        return user
 
 if __name__ == '__main__':           
     bot1 = Bot('6478111175:AAHKn0haLwAn7dnCEIdDIkUxAhCSPuSmy64')
