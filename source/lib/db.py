@@ -1,21 +1,16 @@
-from db_connect import engine
 from models import Pars_db
 from db_connect import db_session
 
-#Тестовые данные для проверки
 
-data = {'rooms':'3','area':'dfsdsaf', 'price':'3412',
-        'address':'asdafa', 'district':'adfadsfa',
-        'floor':'234', 'url':'kjbadfkjba', 'type':'safDS'
-        }
+pars_db = Pars_db(id=id, rooms=rooms, area=area, price=price,
+        address=address, district=district, floor=floor,
+        url=url, type=type)
 
-def insert_pars(data):
 
-    conn = engine.connect()
-    result = conn.execute(db_session.query(), data)
-    conn.commit
-    conn.close
+def insert_pars():
+    db_session.add(pars_db)
+    db_session.commit()
+
 
 def query_pars():
-    conn = engine.connect()
-    result = conn.execute(Pars_db.query().all)
+    db_session.query(all())
