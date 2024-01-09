@@ -7,6 +7,8 @@ from telegram.ext import (
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, ParseMode
 
+from mongo_db import Mongo
+
 
 class Bot:
 
@@ -14,6 +16,7 @@ class Bot:
     def __init__(self, token):
         self.mybot = Updater(token, use_context=True)
         dp = self.mybot.dispatcher
+        self.mongo = Mongo()
         
         dp.add_handler(CommandHandler('start', self.hello_user))
    
@@ -27,7 +30,7 @@ class Bot:
         dp.add_handler(MessageHandler(Filters.regex('^(Сделать запрос всех доступных объявлений)$'), self.take_all))   
         
     """Функция для запуска бота"""
-    def start(self):       
+    def start(self):     
         self.mybot.start_polling()
         self.mybot.idle()
 
@@ -50,6 +53,7 @@ class Bot:
 
     """Функция приветсвует пользователя по имени"""
     def hello_user(self, update, context):
+        self.check_user_in_db(update.effective_user, update.message.chat_id)
         self.name = update.message.from_user.first_name
         update.message.reply_text(f'Привет, {self.name}! Очень рад.', reply_markup=self.main_keyboard())
         update.message.reply_text(f'''В этом боте ты можешь запросить свежие объявления
@@ -109,9 +113,12 @@ class Bot:
 <b>Ссылка</b> - {data[0]['url']}
 <b>Вид продажи</b> - {data[0]['type']}"""
         return user_final_text
-
-
-
+    
+    def check_user_in_db(self, effective_user, chat_id):
+        user = self.mongo.get_user( effective_user.id)
+        if not user:
+            self.mongo.create_user_in_db(effective_user, chat_id)
+        return user
 
 if __name__ == '__main__':           
     bot1 = Bot('6478111175:AAHKn0haLwAn7dnCEIdDIkUxAhCSPuSmy64')
