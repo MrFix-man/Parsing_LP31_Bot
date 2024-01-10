@@ -6,6 +6,7 @@ class Pars_db(Base):
     __tablename__ = 'pars_db'
 
     id = Column(Integer(), primary_key=True)
+    avito_id = Column(Integer())
     rooms = Column(Integer())
     area = Column(Float())
     price = Column(Integer())
