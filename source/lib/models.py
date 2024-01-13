@@ -1,12 +1,11 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy.orm import DeclarativeBase
 
-from bd_pars import Base, engine
-
-
-class Pars(Base):
-    __tablename__ = 'pars_offer'
+class ParsDb(Base):
+    __tablename__ = 'pars_db'
 
     id = Column(Integer(), primary_key=True)
+    avito_id = Column(Integer())
     rooms = Column(Integer())
     area = Column(Float())
     price = Column(Integer())
@@ -16,9 +15,5 @@ class Pars(Base):
     url = Column(String(), unique=True)
     type = Column(String())
 
-    def __init__(self):
-        pass
 
 
-if __name__ == '__main__':
-    Base
