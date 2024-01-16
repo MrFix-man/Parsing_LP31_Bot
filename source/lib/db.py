@@ -1,52 +1,76 @@
-# from models import ParsDb, Base
-from sqlalchemy import select
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.exc import OperationalError, NoSuchModuleError
+
+from models import ParsAvito, ParsDrom
 
 
-class Base(declarative_base()): pass
+class DBError(Exception):
+    """Ошибка работы с БД"""
 
 
 class DB:
-
-    # не могу понять пока почему если __init__ называешь connection, то возникает ошибка
-    def __init__(self, engine):
-        self.engine = engine
-        self.Session = sessionmaker(bind=self.engine)
+    def __init__(self, url: str):
+        self.url = url
+        self.engine = None
+        self.session = None
 
     def connection(self):
-        self.engine = create_engine('sqlite:///pars.db', echo=True)
+        try:
+            self.engine = create_engine(self.url)
+            self.engine.connect()
 
-    def insert_pars(self, all_offers):
-        db_session = self.Session()
-        # очистка базы перед добавлением новой порции данных
-        db_session.query(ParsDb).delete()
-        # добавление данных
+            self.create_session()
+
+        except OperationalError:
+            raise DBError('Ошибка в логине, пароле, адресе сервера или самой БД')
+        except NoSuchModuleError:
+            raise DBError('Неверно задан модуль БД')
+
+    def create_session(self):
+        self.session = scoped_session(sessionmaker(bind=self.engine))
+
+    def insert_avito(self, all_offers: list[dict]) -> None:
+        self.connection()
+
         for offers in all_offers:
-            pars_db = ParsDb(avito_id=offers['avito_id'],
-                             rooms=offers['rooms'],
-                             area=offers['area'],
-                             price=offers['price'],
-                             address=offers['address'],
-                             district=offers['district'],
-                             floor=offers['floor'],
-                             url=offers['url'],
-                             type=offers['type'])
+            pars_avito = ParsAvito(
+                avito_id=offers['avito_id'],
+                rooms=offers['rooms'],
+                area=offers['area'],
+                price=offers['price'],
+                address=offers['address'],
+                district=offers['district'],
+                floor_level=offers['floor'],
+                url_offer=offers['url'],
+                type=offers['type']
+            )
 
-            db_session.add(pars_db)
-        db_session.commit()
+            self.session.add(pars_avito)
+        self.session.commit()
 
-    def query_pars(self):
-        db_session = self.Session()
-        # получение всех данных
-        all_data = db_session.execute(select(ParsDb)).scalars().all()
-        return all_data
-        # можно попробовать реализовать получение данных по id
+    def query_avito(self):
+        self.connection()
+
+        return self.session.query(ParsAvito).all()
+
+    def insert_drom(self, cars_list: list[dict]) -> None:
+        self.connection()
+
+        for cars in cars_list:
+            pars_drom = ParsDrom(
+                url_cars=cars['url_cars'],
+                car_name=cars['car_name'],
+                car_yar=cars['car_yar'],
+                short_descript=cars['short_descript'],
+                prise_int=cars['prise_int'],
+                town=cars['town'],
+                day_of_announcement=cars['day_of_announcement'],
+                site_evaluation=cars['site_evaluation'],
+                type=cars['type']
+            )
+            self.session.add(pars_drom)
+        self.session.commit()
 
 
-if __name__ == '__main__':
-
-
-# self.sqlite_database = 'sqlite:///pars.db'
-# self.engine = create_engine(self.sqlite_database)
-# self.db_session = scoped_session(sessionmaker(bind=self.engine))
+db = DB('sqlite:///pars_db.db')
