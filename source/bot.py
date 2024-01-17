@@ -7,30 +7,33 @@ from telegram.ext import (
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, ParseMode
 
-from mongo_db import Mongo
+from lib.mongo_db import Mongo
 
 
 class Bot:
 
     """Основные данные бота, команды для бота и логика работы"""
-    def __init__(self, token):
+    def __init__(self, token: str, mongo_url: str):
         self.mybot = Updater(token, use_context=True)
         dp = self.mybot.dispatcher
-        self.mongo = Mongo()
-        
+        self.mongo = Mongo(mongo_url)
+
         dp.add_handler(CommandHandler('start', self.hello_user))
-   
+
         """Команды на кнопки для уточнения интересующей категории объявлений"""
-        dp.add_handler(MessageHandler(Filters.regex('^(Аренда жилья)$'), self.rent))
+        dp.add_handler(MessageHandler(
+            Filters.regex('^(Аренда жилья)$'),
+            self.rent
+        ))
         dp.add_handler(MessageHandler(Filters.regex('^(Покупка авто)$'), self.buy))
 
         """Команды на кнопки при запросе нужного количества объявлений"""
         dp.add_handler(MessageHandler(Filters.regex('^(Сделать запрос объявлений - 10)$'), self.take_10))
         dp.add_handler(MessageHandler(Filters.regex('^(Сделать запрос объявлений - 30)$'), self.take_30))
         dp.add_handler(MessageHandler(Filters.regex('^(Сделать запрос всех доступных объявлений)$'), self.take_all))   
-        
+
     """Функция для запуска бота"""
-    def start(self):     
+    def start(self):
         self.mybot.start_polling()
         self.mybot.idle()
 
