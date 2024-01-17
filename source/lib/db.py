@@ -14,13 +14,13 @@ class DB:
         self.url = url
         self.engine = None
         self.session = None
+        self._connect = None
 
-    def connection(self):
+    def _connection(self):
         try:
-            self.engine = create_engine(self.url)
-            self.engine.connect()
-
-            self.create_session()
+            if self._connect is None:
+                self.engine = create_engine(self.url)
+                self._connect = self.engine.connect()
 
         except OperationalError:
             raise DBError('Ошибка в логине, пароле, адресе сервера или самой БД')
@@ -31,7 +31,8 @@ class DB:
         self.session = scoped_session(sessionmaker(bind=self.engine))
 
     def insert_avito(self, all_offers: list[dict]) -> None:
-        self.connection()
+        self._connection()
+        self.create_session()
 
         for offers in all_offers:
             pars_avito = ParsAvito(
@@ -48,14 +49,15 @@ class DB:
 
             self.session.add(pars_avito)
         self.session.commit()
+        self.session.close()
 
     def query_avito(self):
-        self.connection()
+        self._connection()
 
         return self.session.query(ParsAvito).all()
 
     def insert_drom(self, cars_list: list[dict]) -> None:
-        self.connection()
+        self._connection()
 
         for cars in cars_list:
             pars_drom = ParsDrom(
@@ -71,6 +73,7 @@ class DB:
             )
             self.session.add(pars_drom)
         self.session.commit()
+        self.session.close()
 
 
 db = DB('sqlite:///pars_db.db')
