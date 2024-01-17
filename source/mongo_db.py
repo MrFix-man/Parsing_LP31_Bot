@@ -5,6 +5,7 @@ from pymongo import MongoClient
 class Mongo:
     """Инициализируем ссылку на сервер и название БД"""
     def __init__(self):
+        # self.uri = uri
         self.uri = 'mongodb://localhost:27017/'
         self.db_name = 'Users_LP31_Pars'
         self.connection = None
@@ -13,13 +14,13 @@ class Mongo:
     """Фнкция запуска, проверяем что сервер работает корректно
     или возвращаем ошибку"""
     def connect(self):
-        self.client = MongoClient(self.uri)
-        self.db = self.client[self.db_name]
+        self.connection = MongoClient(self.uri)
+        self.db = self.connection[self.db_name]
 
 
     """Закрытие соединения"""
     def close(self):
-        self.client.close()
+        self.connection.close()
           
 
     """Функция проверяет есть ли пользователь в базе, если его нет
@@ -34,14 +35,12 @@ class Mongo:
                 "chat_id": chat_id
                 }
         self.db.users.insert_one(user)
-        self.close() #-- Закрываем содинение
         return user
 
 
     def get_user(self, user_id):
         self.connect() #-- Пробуем подключтиться
         user = self.db.users.find_one({"user_id": user_id})
-        self.close() #-- Закрывам соединение
         return user
         
      

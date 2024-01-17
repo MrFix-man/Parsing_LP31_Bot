@@ -22,7 +22,7 @@ class Bot:
    
         """Команды на кнопки для уточнения интересующей категории объявлений"""
         dp.add_handler(MessageHandler(Filters.regex('^(Аренда жилья)$'), self.rent))
-        dp.add_handler(MessageHandler(Filters.regex('^(Покупка жилья)$'), self.buy))
+        dp.add_handler(MessageHandler(Filters.regex('^(Покупка авто)$'), self.buy))
 
         """Команды на кнопки при запросе нужного количества объявлений"""
         dp.add_handler(MessageHandler(Filters.regex('^(Сделать запрос объявлений - 10)$'), self.take_10))
@@ -39,7 +39,7 @@ class Bot:
     def main_keyboard(self):
         return ReplyKeyboardMarkup([
             ['Аренда жилья'],
-            ['Покупка жилья']
+            ['Покупка авто']
         ])
 
 
@@ -57,8 +57,9 @@ class Bot:
         self.name = update.message.from_user.first_name
         update.message.reply_text(f'Привет, {self.name}! Очень рад.', reply_markup=self.main_keyboard())
         update.message.reply_text(f'''В этом боте ты можешь запросить свежие объявления
-с сайта авито о покупке или сдаче недвижимости.''')
-        update.message.reply_text(f'Что показать? Аренду или покупку жилья?')
+с сайта avito.ru о сдаче недвижимости 
+или объявления о продаже автомобиля с drom.ru.''')
+        update.message.reply_text(f'Что показать? Аренду квартиры или покупку автомобиля?')
 
     """Запрос пользователя сколько нужно объявлений
     в зависимости от типа (аренда/покупка)"""
@@ -114,6 +115,7 @@ class Bot:
 <b>Вид продажи</b> - {data[0]['type']}"""
         return user_final_text
     
+    """Функция работы с МонгоДБ"""
     def check_user_in_db(self, effective_user, chat_id):
         user = self.mongo.get_user( effective_user.id)
         if not user:
