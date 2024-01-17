@@ -13,7 +13,7 @@ class Mongo:
         или возвращаем ошибку"""
         if self._connection is None:
             self._connection = MongoClient(self.uri)
-            self.db = self.connection[self.db_name]
+            self.db = self._connection[self.db_name]
 
     def close(self):
         """Закрытие соединения"""
