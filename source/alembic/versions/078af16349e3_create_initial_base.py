@@ -26,7 +26,7 @@ def upgrade() -> None:
     sa.Column('rooms', sa.String(length=5), nullable=True),
     sa.Column('area', sa.Float(precision=5), nullable=True),
     sa.Column('price', sa.String(length=20), nullable=True),
-    sa.Column('address', sa.String(), nullable=True),
+    sa.Column('adress', sa.String(), nullable=True),
     sa.Column('district', sa.String(), nullable=True),
     sa.Column('floor_level', sa.String(), nullable=True),
     sa.Column('url_offer', sa.String(), nullable=True),
@@ -34,6 +34,21 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('avito_id'),
     sa.UniqueConstraint('url_offer')
+    )
+
+    op.create_table('pars_drom',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('price_int', sa.Integer(), nullable=True),
+    sa.Column('day_of_announcement', sa.String(length=10), nullable=True),
+    sa.Column('type', sa.String(length=20), nullable=True),
+    sa.Column('town', sa.String(length=20), nullable=True),
+    sa.Column('short_descript', sa.String(), nullable=True),
+    sa.Column('car_year', sa.String(), nullable=True),
+    sa.Column('car_name', sa.String(), nullable=True),
+    sa.Column('url_cars', sa.String(), nullable=True),
+    sa.Column('site_evaluation', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('url_cars')
     )
     # ### end Alembic commands ###
 
