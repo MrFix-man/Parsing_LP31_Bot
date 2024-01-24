@@ -33,7 +33,6 @@ def upgrade() -> None:
     sa.Column('type', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('avito_id'),
-    sa.UniqueConstraint('url_offer')
     )
 
     op.create_table('pars_drom',

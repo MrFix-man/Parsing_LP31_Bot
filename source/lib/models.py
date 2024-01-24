@@ -15,7 +15,7 @@ class ParsAvito(Base):
     adress = Column(String())
     district = Column(String())
     floor_level = Column(String())
-    url_offer = Column(String(), unique=True)
+    url_offer = Column(String())
     type = Column(String())
 
 
