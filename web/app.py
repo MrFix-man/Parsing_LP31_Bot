@@ -1,22 +1,21 @@
-from flask import Flask, render_template, url_for, request, redirect
-from source.lib.db import DB
-from source.lib.models import ParsAvito, ParsDrom
+from flask import Flask, render_template
 app = Flask(__name__)
 
 
-@app.route("/index", methods=["GET"])
+@app.route("/")
+@app.route("/index")
 def index():
     return render_template("index.html")
 
 
-@app.route("/drom", methods=["GET"])
+@app.route("/drom")
 def drom():
-    return render_template("drom.html", messages=ParsDrom.query.all)
+    return render_template("drom.html")
 
 
-@app.route("/avito", methods=["GET"])
+@app.route("/avito")
 def avito():
-    return render_template("avito.html", messages=ParsAvito.query.all())
+    return render_template("avito.html")
 
 
 if __name__ == "__main__":
