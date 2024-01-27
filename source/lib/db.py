@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import OperationalError, NoSuchModuleError
 
-from models import ParsAvito, ParsDrom
+from lib.models import ParsAvito, ParsDrom
 
 
 class DBError(Exception):
@@ -51,10 +51,13 @@ class DB:
         self.session.commit()
         self.session.close()
 
-    def query_avito(self):
+    def query_avito(self, count=0):
         self._connection()
-
-        return self.session.query(ParsAvito).all()
+        self.create_session()
+        if count:
+            return self.session.query(ParsAvito).limit(count)
+        else:
+            return self.session.query(ParsAvito).all()
 
     def insert_drom(self, cars_list: list[dict]) -> None:
         self._connection()
@@ -75,5 +78,10 @@ class DB:
         self.session.commit()
         self.session.close()
 
-
-db = DB('sqlite:///pars_db.db')
+    def query_drom(self, count=0):
+        self._connection()
+        self.create_session()
+        if count:
+            return self.session.query(ParsDrom).limit(count)
+        else:
+            return self.session.query(ParsDrom).all()
