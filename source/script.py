@@ -1,4 +1,3 @@
-import sqlite3
 from lib.parser import Parser
 from lib.db import DB
 
@@ -12,10 +11,18 @@ class DataProcessor:
         self.db = DB(url=r'sqlite:///F:/Parsing_with_db/source/lib/my_database.db')
         self.database_path = database_path
 
-    def start_pars(self):
-        if self.drom_url is not None and self.avito_url is not None:
-            self._push_bd_avito()
-            self._push_bd_drom()
+    def start_pars(self) -> tuple:
+        return self._check_url_avito(), self._check_url_drom()
+
+    def _check_url_avito(self) -> any:
+        if self.avito_url is not None:
+            return self._push_bd_avito()
+        return f'Заданный адрес не существует'
+
+    def _check_url_drom(self) -> any:
+        if self.drom_url is not None:
+            return self._push_bd_drom()
+        return f'Заданный адрес не существует'
 
     def _push_bd_avito(self) -> None:
         return self._bd_owner_avito()
@@ -39,9 +46,8 @@ class DataProcessor:
 
 
 if __name__ == '__main__':
-    avito_url = 'https://www.avito.ru/balashiha/kvartiry/sdam-ASgBAgICAUSSA8gQ?p=5'
+    avito_url = "https://www.avito.ru/balashiha/kvartiry/sdam-ASgBAgICAUSSA8gQ?p=5"
     drom_url = 'https://auto.drom.ru/'
-    database_path = "F:/Parsing_with_db/source/lib/my_database.db"
 
     parsing_on = DataProcessor(avito_url=avito_url, drom_url=drom_url)
 

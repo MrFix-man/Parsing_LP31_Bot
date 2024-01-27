@@ -58,6 +58,7 @@ class DB:
 
     def query_avito(self):
         self._connection()
+        self.create_session()
         return self.session.query(ParsAvito).all()
 
     def insert_drom(self, cars_list: list[dict]) -> None:
@@ -88,4 +89,6 @@ class DB:
 
     def query_drom(self):
         self._connection()
+        self.create_session()
         return self.session.query(ParsDrom).all()
+
