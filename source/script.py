@@ -8,8 +8,7 @@ class DataProcessor:
         self.avito_url = avito_url
         self.drom_url = drom_url
         self.parser = Parser()
-        self.db = DB(url=r'sqlite:///F:/Parsing_with_db/source/lib/my_database.db')
-        self.database_path = database_path
+        self.db = DB(url=database_path)
 
     def start_pars(self) -> tuple:
         return self._check_url_avito(), self._check_url_drom()
@@ -48,7 +47,7 @@ class DataProcessor:
 if __name__ == '__main__':
     avito_url = "https://www.avito.ru/balashiha/kvartiry/sdam-ASgBAgICAUSSA8gQ?p=5"
     drom_url = 'https://auto.drom.ru/'
-
-    parsing_on = DataProcessor(avito_url=avito_url, drom_url=drom_url)
+    database_path = r'sqlite:///F:/Parsing_with_db/source/lib/my_database.db'
+    parsing_on = DataProcessor(avito_url=avito_url, drom_url=drom_url, database_path=database_path)
 
     parsing_on.start_pars()
