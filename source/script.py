@@ -12,10 +12,15 @@ class DataProcessor:
         self.db = DB(url=r'sqlite:///F:/Parsing_with_db/source/lib/my_database.db')
         self.database_path = database_path
 
-    def push_bd_avito(self) -> None:
+    def start_pars(self):
+        if self.drom_url is not None and self.avito_url is not None:
+            self._push_bd_avito()
+            self._push_bd_drom()
+
+    def _push_bd_avito(self) -> None:
         return self._bd_owner_avito()
 
-    def push_bd_drom(self) -> None:
+    def _push_bd_drom(self) -> None:
         return self._bd_owner_drom()
 
     def _process_data_avito(self) -> list[dict]:
@@ -38,8 +43,6 @@ if __name__ == '__main__':
     drom_url = 'https://auto.drom.ru/'
     database_path = "F:/Parsing_with_db/source/lib/my_database.db"
 
-    avito = DataProcessor(avito_url=avito_url)
-    drom = DataProcessor(drom_url=drom_url)
+    parsing_on = DataProcessor(avito_url=avito_url, drom_url=drom_url)
 
-    drom.push_bd_drom()
-    avito.push_bd_avito()
+    parsing_on.start_pars()
