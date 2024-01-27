@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import OperationalError, NoSuchModuleError
 
-from lib.models import ParsAvito, ParsDrom
+from models import ParsAvito, ParsDrom
 
 
 class DBError(Exception):
@@ -51,7 +51,12 @@ class DB:
         self.session.commit()
         self.session.close()
 
-    def query_avito(self, count=0):
+    def query_avito(self):
+        self._connection()
+
+        return self.session.query(ParsAvito).all()
+
+    def query_avito_for_bot(self, count=0):
         self._connection()
         self.create_session()
         if count:
@@ -78,10 +83,13 @@ class DB:
         self.session.commit()
         self.session.close()
 
-    def query_drom(self, count=0):
+    def query_drom_for_bot(self, count=0):
         self._connection()
         self.create_session()
         if count:
             return self.session.query(ParsDrom).limit(count)
         else:
             return self.session.query(ParsDrom).all()
+
+
+db = DB('sqlite:///pars_db.db')
