@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import OperationalError, NoSuchModuleError
 
-from models import ParsAvito, ParsDrom
+from source.lib.models import ParsAvito, ParsDrom
 
 
 class DBError(Exception):
@@ -74,6 +74,11 @@ class DB:
             self.session.add(pars_drom)
         self.session.commit()
         self.session.close()
+
+    def query_drom(self):
+        self._connection()
+
+        return self.session.query(ParsDrom).all()
 
 
 db = DB('sqlite:///pars_db.db')
