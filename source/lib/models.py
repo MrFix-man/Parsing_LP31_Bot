@@ -32,4 +32,3 @@ class ParsDrom(Base):
     day_of_announcement = Column(String())
     site_evaluation = Column(String())
     type = Column(String())
-
