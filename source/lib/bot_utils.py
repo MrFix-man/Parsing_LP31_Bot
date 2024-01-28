@@ -4,7 +4,7 @@ from lib.db import DB
 
 
 mongo = Mongo('mongodb://localhost:27017/')
-db = DB('sqlite:///my_database.db')   # source/
+db = DB('sqlite:///my_database1.db')   # source/
 
 
 def main_keyboard():
@@ -125,15 +125,15 @@ def _create_final_text_avito(data):
 
 
 def _create_final_text_drom(data):
-    user_final_text = [
-        f"<b>Ссылка на сайт</b> - {data.url_cars}\n",
-        f"<b>Наименование авто</b> - {data.car_name}\n",
-        f"<b>Год выпуска</b> - {data.car_year}\n",
-        f"<b>Короткое описание</b> - {data.short_descript}\n",
-        f"<b>Цена</b> - {data.prise_int}\n",
-        f"<b>Город</b> - {data.town}\n",
-        f"<b>Дата публикации</b> - {data.day_of_announcement}\n",
-        f"<b>Оценка сайта</b> - {data.site_evaluation}\n",
-        f"<b>Вид продажи</b> - {data.type}"
-        ]
+    user_final_text = (
+        f"<b>Ссылка на сайт</b> - {data.url_cars}\n"
+        f"<b>Наименование авто</b> - {data.car_name}\n"
+        f"<b>Год выпуска</b> - {data.car_year}\n"
+        f"<b>Короткое описание</b> - {data.short_descript}\n"
+        f"<b>Цена</b> - {data.price_int}\n"
+        f"<b>Город</b> - {data.town}\n"
+        f"<b>Дата публикации</b> - {data.day_of_announcement}\n"
+        f"<b>Оценка сайта</b> - {data.site_evaluation}\n"
+        f"<b>Вид продажи</b> - {data.type}\n"
+    )
     return user_final_text

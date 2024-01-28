@@ -19,7 +19,7 @@ class Bot:
         self.mybot = Updater(token, use_context=True)
         dp = self.mybot.dispatcher
         self.mongo = Mongo(mongo_url)
-        self.db = DB('sqlite:///source/my_database.db')
+        self.db = DB('sqlite:///source/my_database1.db')
 
         dp.add_handler(CommandHandler('start', self.hello_user))
 
