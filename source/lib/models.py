@@ -12,22 +12,22 @@ class ParsAvito(Base):
     rooms = Column(String(5))
     area = Column(Float(5))
     price = Column(String(20))
-    address = Column(String())
+    adress = Column(String())
     district = Column(String())
     floor_level = Column(String())
-    url_offer = Column(String(), unique=True)
+    url_offer = Column(String())
     type = Column(String())
 
 
-class ParsDrom:
+class ParsDrom(Base):
     __tablename__ = 'pars_drom'
 
     id = Column(Integer(), primary_key=True)
     url_cars = Column(String(), unique=True)
     car_name = Column(String(25))
-    car_yar = Column(Integer())
+    car_year = Column(Integer())
     short_descript = Column(String())
-    prise_int = Column(Integer())
+    price_int = Column(Integer())
     town = Column(String())
     day_of_announcement = Column(String())
     site_evaluation = Column(String())
