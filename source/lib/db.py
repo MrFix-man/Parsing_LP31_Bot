@@ -61,6 +61,14 @@ class DB:
         self.create_session()
         return self.session.query(ParsAvito).all()
 
+    def query_avito_for_bot(self, count=0):
+        self._connection()
+        self.create_session()
+        if count:
+            return self.session.query(ParsAvito).limit(count)
+        else:
+            return self.session.query(ParsAvito).all()
+
     def insert_drom(self, cars_list: list[dict]) -> None:
         self._connection()
         self.create_session()
@@ -87,7 +95,5 @@ class DB:
         self.session.commit()
         self.session.close()
 
-    def query_drom(self):
-        self._connection()
-        self.create_session()
-        return self.session.query(ParsDrom).all()
+
+
