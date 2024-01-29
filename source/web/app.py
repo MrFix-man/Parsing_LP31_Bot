@@ -1,8 +1,8 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template
 from source.lib.db import DB
 
 app = Flask(__name__)
-db = DB("sqlite:////pars_db.db")
+db = DB("sqlite:////home/mr_fix-man/PycharmProjects/Parsing_LP31_Bot/source/my_database.db")
 
 
 @app.route("/")
