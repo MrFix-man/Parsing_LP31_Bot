@@ -15,7 +15,7 @@ from lib.db import DB
 class Bot:
 
     """Основные данные бота, команды для бота и логика работы"""
-    def __init__(self, token: str, mongo_url: str):
+    def __init__(self, token: str, mongo_url: str) -> None:
         self.mybot = Updater(token, use_context=True)
         dp = self.mybot.dispatcher
         self.mongo = Mongo(mongo_url)
@@ -58,12 +58,12 @@ class Bot:
             MessageHandler(Filters.regex('^(Сделать все запросы с дром)$'),
                            take_all_drom))
 
-    def start(self):
+    def start(self) -> None:
         """Функция для запуска бота"""
         self.mybot.start_polling()
         self.mybot.idle()
 
-    def hello_user(self, update, context):
+    def hello_user(self, update, context) -> None:
         """Функция приветсвует пользователя по имени"""
         check_user_in_db(update.effective_user, update.message.chat_id)
         self.name = update.message.from_user.first_name
@@ -82,7 +82,7 @@ class Bot:
             'Выбери что смотрим, авто или квартира.'
               )
 
-    def rent_aparment(self, update, context):
+    def rent_aparment(self, update, context) -> None:
         """Запрос пользователя сколько нужно объявлений
         в зависимости от типа (аренда/покупка)"""
         update.message.reply_text(
@@ -92,7 +92,7 @@ class Bot:
             'Выбери сколько показать объявлений',
             reply_markup=keyboard_requests_avito())
 
-    def buy_car(self, update, context):
+    def buy_car(self, update, context) -> None:
         update.message.reply_text(
             'Отлично, смотрим автомобили на дроме'
             )
@@ -100,7 +100,7 @@ class Bot:
             'Выбери сколько показать объявлений',
             reply_markup=keyboard_requests_drom())
 
-    def check_user_in_db(self, effective_user, chat_id):
+    def check_user_in_db(self, effective_user, chat_id: int) -> dict:
         """Функция работы с МонгоДБ"""
         user = self.mongo.get_user(effective_user.id)
         if not user:

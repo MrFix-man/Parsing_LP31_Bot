@@ -101,4 +101,4 @@ class DB:
         if count:
             return self.session.query(ParsDrom).limit(count)
         else:
-            return self.session.query(ParsDrom).all()
+            return self.session.query(ParsAvito).all()
