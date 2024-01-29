@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+База Дром
+{% endblock %}
+
+{% block body %}
+Дром
+{% endblock %}
+
+<h1> База Дром</h1>
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>price_int</th>
+                <th>short_descript</th>
+                <th>car_year</th>
+                <th>car_name</th>
+                <th>url_cars</th>
+                <th>site_evaluation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in auto %}
+                <tr>
+                    <td>{{ data.id }}</td>
+                    <td>{{ data.price_int }}</td>
+                    <td>{{ data.short_descript }}</td>
+                    <td>{{ data.car_year }}</td>
+                    <td>{{ data.car_name }}</td>
+                    <td>{{ data.url_cars }}</td>
+                    <td>{{ data.site_evaluation }}</td>
+                </tr>
+        </tbody>
+            {% endfor %}
+
+
+    </table>
+{% endblock %}

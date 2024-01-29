@@ -40,10 +40,10 @@ class DB:
                 rooms=offers['rooms'],
                 area=offers['area'],
                 price=offers['price'],
-                address=offers['address'],
+                adress=offers['adress'],
                 district=offers['district'],
-                floor_level=offers['floor'],
-                url_offer=offers['url'],
+                floor_level=offers['floor_level'],
+                url_offer=offers['url_offer'],
                 type=offers['type']
             )
 
@@ -53,19 +53,20 @@ class DB:
 
     def query_avito(self):
         self._connection()
-
+        self.create_session()
         return self.session.query(ParsAvito).all()
 
     def insert_drom(self, cars_list: list[dict]) -> None:
         self._connection()
+        self.create_session()
 
         for cars in cars_list:
             pars_drom = ParsDrom(
                 url_cars=cars['url_cars'],
                 car_name=cars['car_name'],
-                car_yar=cars['car_yar'],
+                car_year=cars['car_year'],
                 short_descript=cars['short_descript'],
-                prise_int=cars['prise_int'],
+                price_int=cars['price_int'],
                 town=cars['town'],
                 day_of_announcement=cars['day_of_announcement'],
                 site_evaluation=cars['site_evaluation'],
@@ -77,8 +78,8 @@ class DB:
 
     def query_drom(self):
         self._connection()
-
+        self.create_session()
         return self.session.query(ParsDrom).all()
 
 
-db = DB('sqlite:///pars_db.db')
+# db = DB('sqlite:///pars_db.db')

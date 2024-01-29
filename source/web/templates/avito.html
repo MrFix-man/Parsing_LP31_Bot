@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-База Дром
+База Авито
 {% endblock %}
 
 {% block body %}
-Дром
+Авито
+{% for i in home %}
+    {{ i }}
+{% endfor %}
 {% endblock %}
