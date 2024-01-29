@@ -13,13 +13,13 @@
     <table>
         <thead>
             <tr>
-                <th>id</th>
-                <th>price_int</th>
-                <th>short_descript</th>
-                <th>car_year</th>
-                <th>car_name</th>
-                <th>url_cars</th>
-                <th>site_evaluation</th>
+                <th>№</th>
+                <th>Цена</th>
+                <th>ТТХ</th>
+                <th>Год выпуска</th>
+                <th>Марка</th>
+                <th>Ссылка</th>
+                <th>Оценка цены</th>
             </tr>
         </thead>
         <tbody>
@@ -30,7 +30,7 @@
                     <td>{{ data.short_descript }}</td>
                     <td>{{ data.car_year }}</td>
                     <td>{{ data.car_name }}</td>
-                    <td>{{ data.url_cars }}</td>
+                    <td><a href="{{ data.url_cars }}"> Просмотреть </a></td>
                     <td>{{ data.site_evaluation }}</td>
                 </tr>
         </tbody>

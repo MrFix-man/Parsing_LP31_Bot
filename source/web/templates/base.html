@@ -10,9 +10,9 @@
     <div class="container">
     <header class="d-flex justify-content-center py-3">
       <ul class="nav nav-pills">
-        <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link active" aria-current="page">Главная</a></li>
-        <li class="nav-item"><a href="{{ url_for('avito') }}" class="nav-link" aria-current="page">База авито</a></li>
-        <li class="nav-item"><a href="{{ url_for('drom') }}" class="nav-link">Дром</a></li>
+        <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link {% if request.path == url_for('index') %} active {% endif %}" aria-current="home">Главная</a></li>
+        <li class="nav-item"><a href="{{ url_for('avito') }}" class="nav-link {% if request.path == url_for('avito') %} active {% endif %}" aria-current="avito">База авито</a></li>
+        <li class="nav-item"><a href="{{ url_for('drom') }}" class="nav-link {% if request.path == url_for('drom') %} active {% endif %}" aria-current="drom">Дром</a></li>
       </ul>
     </header>
     {% block content %} {% endblock %}
