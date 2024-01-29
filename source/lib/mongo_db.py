@@ -3,19 +3,19 @@ from pymongo import MongoClient
 
 class Mongo:
     """Инициализируем ссылку на сервер и название БД"""
-    def __init__(self, uri: str):
+    def __init__(self, uri: str) -> None:
         self.uri = uri
         self.db_name = 'Users_LP31_Pars'
         self._connection = None
 
-    def _connect(self):
+    def _connect(self) -> None:
         """Фнкция запуска, проверяем что сервер работает корректно
         или возвращаем ошибку"""
         if self._connection is None:
             self._connection = MongoClient(self.uri)
             self.db = self._connection[self.db_name]
 
-    def close(self):
+    def close(self) -> None:
         """Закрытие соединения"""
         self._connection.close()
 

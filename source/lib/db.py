@@ -95,5 +95,10 @@ class DB:
         self.session.commit()
         self.session.close()
 
-
-
+    def query_drom_for_bot(self, count=0):
+        self._connection()
+        self.create_session()
+        if count:
+            return self.session.query(ParsDrom).limit(count)
+        else:
+            return self.session.query(ParsDrom).all()
