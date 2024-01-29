@@ -1,11 +1,8 @@
 from flask import Flask, render_template, url_for, request
 from source.lib.db import DB
 
-
-static_folder = "/static"
-template_folder = '/templates'
 app = Flask(__name__)
-db = DB("sqlite:////home/mr_fix-man/PycharmProjects/Parsing_LP31_Bot/source/my_database.db")
+db = DB("sqlite:////pars_db.db")
 
 
 @app.route("/")
