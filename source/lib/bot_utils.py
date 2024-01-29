@@ -44,80 +44,51 @@ def check_user_in_db(effective_user, chat_id: int) -> dict:
 def take_10_avito(update, context) -> None:
     """Блок функций под кнопки в боте на вывод объявлений"""
     query = db.query_avito_for_bot(10)
-    # text = []
     for data in query:
         update.message.reply_text(
             _create_final_text_avito(data),
             reply_markup=main_keyboard(), parse_mode=ParseMode.HTML)
-    # update.message.reply_text(
-    #     "\n".join(text), reply_markup=main_keyboard(),
-    #     parse_mode=ParseMode.HTML
-    #     )
 
 
 def take_30_avito(update, context) -> None:
     query = db.query_avito_for_bot(30)
-    # text = []
     for data in query:
         update.message.reply_text(
             _create_final_text_avito(data),
             reply_markup=main_keyboard(), parse_mode=ParseMode.HTML)
-    # update.message.reply_text(
-    #     "\n".join(text), reply_markup=main_keyboard(),
-    #     parse_mode=ParseMode.HTML
-    #     )
 
 
 def take_all_avito(update, context) -> None:
     query = db.query_avito_for_bot()
-    # text = []
     for data in query:
         update.message.reply_text(
             _create_final_text_avito(data),
             reply_markup=main_keyboard(), parse_mode=ParseMode.HTML)
-    # update.message.reply_text(
-    #     "\n".join(text), reply_markup=main_keyboard(),
-    #     parse_mode=ParseMode.HTML
-    #     )
 
 
 def take_10_drom(update, context) -> None:
     """Блок функций под кнопки в боте на вывод объявлений"""
     query = db.query_drom_for_bot(10)
-    # text = []
     for data in query:
         update.message.reply_text(
+            _create_final_text_drom(data),
             reply_markup=main_keyboard(), parse_mode=ParseMode.HTML)
-    # update.message.reply_text(
-    #     "\n".join(text), reply_markup=main_keyboard(),
-    #     parse_mode=ParseMode.HTML
-    #     )
 
 
 def take_30_drom(update, context) -> None:
     query = db.query_drom_for_bot(30)
-    # text = []
     for data in query:
         update.message.reply_text(
             _create_final_text_drom(data),
             reply_markup=main_keyboard(), parse_mode=ParseMode.HTML)
-    # update.message.reply_text(
-    #     "\n".join(text), reply_markup=main_keyboard(),
-    #     parse_mode=ParseMode.HTML
-    #     )
 
 
 def take_all_drom(update, context) -> None:
     query = db.query_drom_for_bot()
-    # text = []
     for data in query:
         update.message.reply_text(
             _create_final_text_drom(data),
             reply_markup=main_keyboard(), parse_mode=ParseMode.HTML)
-    # update.message.reply_text(
-    #     "\n".join(text), reply_markup=main_keyboard(),
-    #     parse_mode=ParseMode.HTML
-    #     )
 
 
 def _create_final_text_avito(data: list) -> str:
