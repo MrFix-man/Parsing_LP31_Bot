@@ -1,2 +1,5 @@
 venv
 pars_db.db
+my_database.db
+my_database1.db
+__pycache__
