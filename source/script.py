@@ -47,7 +47,7 @@ class DataProcessor:
 if __name__ == '__main__':
     avito_url = "https://www.avito.ru/balashiha/kvartiry/sdam-ASgBAgICAUSSA8gQ?p=5"
     drom_url = 'https://auto.drom.ru/'
-    database_path = r'sqlite:///F:/Parsing_with_db/source/lib/my_database.db'
+    database_path = r'sqlite:///F:/Parsing_with_db/source/lib/my_database.db' 
     parsing_on = DataProcessor(avito_url=avito_url, drom_url=drom_url, database_path=database_path)
 
     parsing_on.start_pars()
