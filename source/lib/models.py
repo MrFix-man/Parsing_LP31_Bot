@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.orm import declarative_base
+import sqlalchemy.dialects.postgresql
 
-Base = declarative_base()
+Base = sqlalchemy.orm.declarative_base()
 
 
 class ParsAvito(Base):
@@ -9,8 +10,8 @@ class ParsAvito(Base):
 
     id = Column(Integer(), primary_key=True)
     avito_id = Column(Integer(), unique=True)
-    rooms = Column(String(5))
-    area = Column(Float(5))
+    rooms = Column(String(50))
+    area = Column(Float(9))
     price = Column(String(20))
     adress = Column(String())
     district = Column(String())
@@ -24,7 +25,7 @@ class ParsDrom(Base):
 
     id = Column(Integer(), primary_key=True)
     url_cars = Column(String(), unique=True)
-    car_name = Column(String(25))
+    car_name = Column(String(50))
     car_year = Column(Integer())
     short_descript = Column(String())
     price_int = Column(Integer())
