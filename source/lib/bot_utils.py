@@ -4,7 +4,7 @@ from lib.db import DB
 
 
 mongo = Mongo('mongodb://localhost:27017/')
-db = DB('sqlite:///my_database1.db')
+db = DB('postgresql://postgres:qawsed-112@127.0.0.1:5432/postgres')
 
 
 def main_keyboard() -> ReplyKeyboardMarkup:
