@@ -102,3 +102,7 @@ class DB:
             return self.session.query(ParsDrom).limit(count)
         else:
             return self.session.query(ParsDrom).all()
+
+
+
+
