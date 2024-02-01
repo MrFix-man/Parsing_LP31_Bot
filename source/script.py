@@ -1,6 +1,6 @@
 from lib.parser import Parser
 from lib.db import DB
-
+import config
 
 class DataProcessor:
 
@@ -47,7 +47,7 @@ class DataProcessor:
 if __name__ == '__main__':
     avito_url = "https://www.avito.ru/balashiha/kvartiry/sdam-ASgBAgICAUSSA8gQ?p=5"
     drom_url = 'https://auto.drom.ru/'
-    database_path = r'postgresql://postgres:5215314@127.0.0.1:5432/postgres'
+    database_path = config.PG_PATH
     parsing_on = DataProcessor(avito_url=avito_url, drom_url=drom_url, database_path=database_path)
 
     parsing_on.start_pars()

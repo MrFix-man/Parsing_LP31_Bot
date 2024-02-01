@@ -1,10 +1,11 @@
 from telegram import ReplyKeyboardMarkup, ParseMode
 from lib.mongo_db import Mongo
 from lib.db import DB
+import config
 
 
 mongo = Mongo('mongodb://localhost:27017/')
-db = DB('postgresql://postgres:qawsed-112@127.0.0.1:5432/postgres')
+db = DB(config.PG_PATH)
 
 
 def main_keyboard() -> ReplyKeyboardMarkup:

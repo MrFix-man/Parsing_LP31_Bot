@@ -10,6 +10,7 @@ from lib.bot_utils import (
 )
 from lib.mongo_db import Mongo
 from lib.db import DB
+import config
 
 
 class Bot:
@@ -19,7 +20,7 @@ class Bot:
         self.mybot = Updater(token, use_context=True)
         dp = self.mybot.dispatcher
         self.mongo = Mongo(mongo_url)
-        self.db = DB('postgresql://postgres:qawsed-112@127.0.0.1:5432/postgres')
+        self.db = DB(config.PG_PATH)
 
         dp.add_handler(CommandHandler('start', self.hello_user))
 
