@@ -1,0 +1,23 @@
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #ffffff;
+    -webkit-box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+        box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+tr:nth-child(even) {
+    background-color: #979797;
+}
+

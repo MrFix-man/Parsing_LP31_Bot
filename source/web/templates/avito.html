@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+База Авито
+{% endblock %}
+
+{% block body %}
+
+{% endblock %}
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Комнаты</th>
+                <th>Цена</th>
+                <th>Адресс</th>
+                <th>Район</th>
+                <th>Этаж</th>
+                <th>Ссылка</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in home %}
+                <tr>
+                    <td>{{ data.id }}</td>
+                    <td>{{ data.rooms }}</td>
+                    <td>{{ data.price }}</td>
+                    <td>{{ data.adress }}</td>
+                    <td>{{ data.district }}</td>
+                    <td>{{ data.floor_level }}</td>
+                    <td><a href="{{ data.url_offer }}"> Просмотреть </a></td>
+                </tr>
+        </tbody>
+            {% endfor %}
+
+
+    </table>
+{% endblock %}
