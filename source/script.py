@@ -2,6 +2,7 @@ from lib.parser import Parser
 from lib.db import DB
 
 
+
 class DataProcessor:
 
     def __init__(self, avito_url=None, drom_url=None, database_path=None) -> None:

@@ -91,3 +91,4 @@ class DB:
         self._connection()
         self.create_session()
         return self.session.query(ParsDrom).all()
+
